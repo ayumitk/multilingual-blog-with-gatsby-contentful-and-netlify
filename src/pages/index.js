@@ -1,27 +1,28 @@
 import React from "react"
-
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import { useIntl } from "gatsby-plugin-intl"
 
-const IndexPage = ({ data }) => (
+const IndexPage = ({ data }) => {
+  const intl = useIntl()
+  return(
   <Layout>
     <SEO title="Home" />
-    <h1>Hi people</h1>
-
-    <h2 style={{margin: `0.5rem`}}>Posts</h2>
-    <ul style={{ marginBottom: `2rem` }}>
-      {data.allContentfulPost.nodes.map(post => {
+    <h1>{intl.formatMessage({ id: "hello" })}</h1>
+    <h2>{intl.formatMessage({ id: "posts" })}</h2>
+    <ul>
+      {data.allContentfulBlog.nodes.map(post => {
         return (
           <li key={post.contentful_id}>{post.title}</li>
         )
       })}
     </ul>
   </Layout>
-)
+)}
 
 export const query = graphql`
-  query ContentFulPosts {
-    allContentfulPost {
+  query ContentFulBlog($language: String) {
+    allContentfulBlog(filter: { node_locale: { eq: $language } }) {
       nodes {
         contentful_id
         node_locale
@@ -30,4 +31,5 @@ export const query = graphql`
     }
   }
 `
+
 export default IndexPage
